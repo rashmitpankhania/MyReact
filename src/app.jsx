@@ -72,9 +72,11 @@ class IssueList extends React.Component {
     render() {
         return (
             <div>
+                <h1>Issue Tracker</h1>
                 <IssueFilter /><hr />
                 <IssueTable issues={data} /><hr />
                 <IssueAdd /><hr />
+                <footer>Rashmit Pankhania &copy;</footer>
             </div>
         )
     }

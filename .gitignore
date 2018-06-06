@@ -63,3 +63,5 @@ typings/
 package\.json
 
 package-lock\.json
+
+static/app\.js
