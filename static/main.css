@@ -1,0 +1,13 @@
+body {
+    background-color: seashell;
+}
+th,td {
+    border: 1px solid silver;
+    padding: 6px;
+}
+
+table{
+    border: 1px solid silver;
+    padding: 4px;
+    border-collapse: collapse;
+}
