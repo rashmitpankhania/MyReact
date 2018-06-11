@@ -48,9 +48,31 @@ class IssueTable extends React.Component {
 }
 
 class IssueAdd extends React.Component {
+    constructor() {
+        super();
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+    handleSubmit(e) {
+        e.preventDefault();
+        var form = document.forms.issueAdd;
+        this.props.createIssue({
+            owner: form.owner.value,
+            title: form.title.value,
+            status: "New",
+            created: new Date(),
+        })
+        form.owner = "";
+        form.title = "";
+    }
     render() {
         return (
-            <div>This is a placeholder for an Issue Add entry form.</div>
+            <div>This is a placeholder for an Issue Add entry form.
+                <form name="issueAdd" >
+                    <input type="text" name="Owner" placeholder="write owner name" />
+                    <input type="text" name="title" placeholder="write issue name" />
+                    <button onSubmit={this.handleSubmit}>Add</button>
+                </form>
+            </div>
         )
     }
 }
@@ -71,23 +93,25 @@ const issues = [
 class IssueList extends React.Component {
     constructor() {
         super();
-        this.state = { issues: issues };
+        this.state = { issues: [] };
 
-        setTimeout(this.createTestIssue.bind(this), 2000);
+        this.createIssue = this.createIssue.bind(this);
     }
 
+    componentDidMount() {
+        this.loadData();
+    }
+
+    loadData() {
+        setTimeout(() => {
+            this.setState({ issues: issues });
+        }, 500);
+    }
     createIssue(newIssue) {
         const newIssues = this.state.issues.slice();
         newIssue.id = this.state.issues.length + 1;
         newIssues.push(newIssue);
         this.setState({ issues: newIssues });
-    }
-
-    createTestIssue() {
-        this.createIssue({
-            status: 'New', owner: 'Pieta', created: new Date(),
-            title: 'Completion date should be optional',
-        });
     }
 
     render() {
@@ -98,7 +122,7 @@ class IssueList extends React.Component {
                 <hr />
                 <IssueTable issues={this.state.issues} />
                 <hr />
-                <IssueAdd />
+                <IssueAdd createIssue={this.createIssue} />
             </div>
         );
     }
