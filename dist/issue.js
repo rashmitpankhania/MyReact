@@ -1,3 +1,6 @@
+Object.defineProperty(exports, '__esModule', {
+    value: true,
+});
 const validIssueStatus = {
     New: true,
     Open: true,
@@ -26,11 +29,12 @@ function validateIssue(issue) {
         }
     }
 
-    if (!validIssueStatus[issue.status]) { return `${issue.status} is not a valid status.`; }
+    if (!validIssueStatus[issue.status]) return `${issue.status} is not a valid status.`;
 
     return null;
 }
 
-export default {
+exports.default = {
     validateIssue,
 };
+// # sourceMappingURL=issue.js.map
