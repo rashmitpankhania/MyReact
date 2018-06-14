@@ -3,7 +3,7 @@ const path = require('path');
 
 module.exports = {
     entry: {
-        app: './src/app.jsx',
+        app: ['./src/app.jsx'],
         vendor:['react', 'react-dom', 'babel-polyfill', 'whatwg-fetch']
     },
     output: {
@@ -44,5 +44,14 @@ module.exports = {
                 }
             },
          ]
-     },
+    },
+    devServer: {
+        port: 8000,
+        contentBase: 'static',
+        proxy: {
+            '/api/*':{
+                target: 'http://localhost:3000'
+            }
+        }
+    }
  };
