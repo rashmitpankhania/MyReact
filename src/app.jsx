@@ -1,16 +1,9 @@
 const contentNode = document.getElementById('contents');
-
-class IssueFilter extends React.Component {
-    render() {
-        return (
-            <div>This is a placeholder for the Issue Filter.</div>
-        )
-    }
-}
-
+import IssueAdd from './issueadd.jsx'
+import IssueFilter from './issuefilter.jsx'
 const IssueRow = (props) => (
     <tr>
-        <td>{props.issue.id}</td>
+        <td>{props.issue._id}</td>
         <td>{props.issue.status}</td>
         <td>{props.issue.owner}</td>
         <td>{props.issue.created.toDateString()}</td>
@@ -21,7 +14,7 @@ const IssueRow = (props) => (
 )
 
 function IssueTable(props) {
-    const issueRows = props.issues.map(issue => <IssueRow key={issue.id} issue={issue} />)
+    const issueRows = props.issues.map(issue => <IssueRow key={issue._id} issue={issue} />)
     return (
         <table className="bordered-table">
             <thead>
@@ -38,38 +31,6 @@ function IssueTable(props) {
             <tbody>{issueRows}</tbody>
         </table>
     );
-}
-
-class IssueAdd extends React.Component {
-    constructor() {
-        super();
-        this.handleSubmit = this.handleSubmit.bind(this);
-    }
-
-    handleSubmit(e) {
-        e.preventDefault();
-        var form = document.forms.issueAdd;
-        this.props.createIssue({
-            owner: form.owner.value,
-            title: form.title.value,
-            status: 'New',
-            created: new Date(),
-        });
-        // clear the form for the next input
-        form.owner.value = ""; form.title.value = "";
-    }
-
-    render() {
-        return (
-            <div>
-                <form name="issueAdd" onSubmit={this.handleSubmit}>
-                    <input type="text" name="owner" placeholder="Owner" />
-                    <input type="text" name="title" placeholder="Title" />
-                    <button>Add</button>
-                </form>
-            </div>
-        )
-    }
 }
 
 class IssueList extends React.Component {
@@ -103,16 +64,20 @@ class IssueList extends React.Component {
     createIssue(newIssue) {
         fetch('/api/issues', {
             method: 'POST',
-            headers: {'Content-Type':'application/JSON'},
+            headers: { 'Content-Type': 'application/JSON' },
             body: JSON.stringify(newIssue)
-        }).then(res => res.json()).then(updatesIssue => {
-            updatesIssue.created = new Date(updatesIssue.created);
-            if(updatesIssue.completionDate){
-                updatesIssue.completionDate = new Date(updatesIssue.completionDate);
-            }
-            const newIssues = this.state.issues.concat(updatesIssue);
-            this.setState({issues: newIssues})
-        }).catch(err => alert(err));
+        }).then(res => {
+            if (res.ok) {
+                res.json().then(updatesIssue => {
+                    updatesIssue.created = new Date(updatesIssue.created);
+                    if (updatesIssue.completionDate) {
+                        updatesIssue.completionDate = new Date(updatesIssue.completionDate);
+                    }
+                    const newIssues = this.state.issues.concat(updatesIssue);
+                    this.setState({ issues: newIssues })
+                })
+            } else { res.json().then(err => alert(err.message)); }
+        }).catch(err => { alert(err.message); });
     }
 
     render() {
