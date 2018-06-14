@@ -4,6 +4,7 @@ const path = require('path');
 module.exports = {
     entry: {
         app: './src/app.jsx',
+        vendor:['react', 'react-dom', 'babel-polyfill', 'whatwg-fetch']
     },
     output: {
         path: path.join(__dirname, './static'),
@@ -11,11 +12,21 @@ module.exports = {
     },
     optimization: {
         splitChunks: {
+            chunks: "async",
+            minSize: 30000,
+            minChunks: 1,
+            maxAsyncRequests: 5,
+            maxInitialRequests: 3,
+            name: true,
             cacheGroups: {
-                commons: {
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    reuseExistingChunk: true,
+                },
+                vendors: {
                     test: /[\\/]node_modules[\\/]/,
-                    name: 'vendor',
-                    chunks: 'all'
+                    priority: -10
                 }
             }
         }
