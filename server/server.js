@@ -27,7 +27,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 app.get('/api/issues', (req, res) => {
-  db.collection('issues').find().toArray().then((issues) => {
+  db.collection('issues').find().toArray().then((issues) => { // eslint-disable-line
     const metadata = { total_count: issues.length };
     res.json({ _metadata: metadata, records: issues });
   })
@@ -48,9 +48,9 @@ app.post('/api/issues', (req, res) => {
     return;
   }
 
-  db.collection('issues').insertOne(newIssue).then(result =>
-    db.collection('issues').findOne({ _id: result.insertedId }).then((newIssue) => {
-      res.json(newIssue);
+  db.collection('issues').insertOne(Issue.cleanupIssue(newIssue)).then(result =>
+    db.collection('issues').findOne({ _id: result.insertedId }).then((newe) => {
+      res.json(newe);
     }).catch((error) => {
       res.status(500).json({ message: `Internal Server Error: ${error}` });
     }));
